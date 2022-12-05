@@ -1,6 +1,6 @@
 {
   "stand_name": "sdpsna",
-  "version": "0.0.1",
+  "version": "0.0.5",
   "build": "none",
   "type": "oozie",
   "configure_item": "CI02720477_AiPlatformUmiid",
