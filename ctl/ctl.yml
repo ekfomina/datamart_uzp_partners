@@ -1,0 +1,119 @@
+categories:
+  - category:
+      id: -1
+      name: "{{CTL_WF_CATEGORY}}"
+entities:
+  - entity:
+      id: 926000000
+      name: "Прикладные данные блока Сеть Продаж"
+      path: "custom/salesntwrk"
+      storage: "HDFS"
+      parent-id: 900000000
+  - entity:
+      id: 926030000
+      name: "УМИИД Dream Enterpise"
+      path: "/data/custom/salesntwrk/umiid"
+      storage: "HDFS"
+      parent-id: 926000000
+  - entity:
+      id: "{{ CTL_ENTITY_ID }}"
+      name: "/data/custom/salesntwrk/ul_profile/uvd_partners"
+      path: "УЗП [Партнеры]"
+      storage: "HDFS"
+      parent-id: 926030000
+workflows:
+    - monitoring:
+        name: "{{WF_NAME}}"
+        profile: "{{PROFILE}}"
+        singleLoading: true
+        killyarnjobonerror: false
+        category: "{{CTL_WF_CATEGORY}}"
+        type: principal
+        orchestrator: oozie
+        schedule_params:
+            
+            cron:
+                expression: "0 6 16 * *"
+                active: true
+        init_locks:
+            checks:
+                - check:
+                    entity_id: "{{CTL_ENTITY_ID}}"
+                    lock: READ
+                    lock_group: INIT
+                - check:
+                    entity_id: "{{CTL_ENTITY_ID}}"
+                    lock: WRITE
+                    lock_group: INIT
+            sets:
+                - set:
+                    entity_id: "{{CTL_ENTITY_ID}}"
+                    lock: READ
+                    estimate: 30
+                    lock_group: INIT
+                - set:
+                    entity_id: "{{CTL_ENTITY_ID}}"
+                    lock: WRITE
+                    estimate: 30
+                    lock_group: INIT
+        params:
+            - param:
+                name: path_to_python
+                prior_value: "{{PATH_TO_PYTHON}}"
+            - param:
+                name: y_executor_mem
+                prior_value: "{{Y_EXECUTOR_MEM}}"
+            - param:
+                name: y_driver_mem
+                prior_value: "{{Y_DRIVER_MEM}}"
+            - param:
+                name: y_executor_cores
+                prior_value: "{{Y_EXECUTOR_CORES}}"
+            - param:
+                name: y_min_executors
+                prior_value: "{{Y_MIN_EXECUTORS}}"
+            - param:
+                name: y_max_executors
+                prior_value: "{{Y_MAX_EXECUTORS}}"
+            - param:
+                name: y_queue
+                prior_value: "{{YARN_QUEUE}}"
+            - param:
+                name: user.name
+                prior_value: "{{USER_NAME}}"
+            - param:
+                name: realm
+                prior_value: "{{REALM}}"
+            - param:
+                name: app_id
+                prior_value: "{{APP_ID}}"
+            - param:
+                name: logstash_url
+                prior_value: "{{LOGSTASH_URL}}"
+            - param:
+                name: oozie.wf.application.path
+                prior_value: "{{ OOZIE_APP_PATH }}"
+            - param:
+                name: path_to_proj_hdfs
+                prior_value: "{{PATH_TO_PROJ_HDFS}}"
+            - param:
+                name: path_to_log_in_hdfs
+                prior_value: "{{PATH_TO_LOG_IN_HDFS}}"
+            - param:
+                name: ctl_entity_id
+                prior_value: "{{ CTL_ENTITY_ID }}"
+            - param:
+                name: wf_name
+                prior_value: "{{ WF_NAME }}"
+            - param:
+                name: force_load
+                prior_value: "{{ FORCE_LOAD }}"
+            - param:
+                name: recovery_mode
+                prior_value: "{{ RECOVERY_MODE }}"
+            - param:
+                name: etl_vars
+                prior_value: "{{ ETL_VARS }}" 
+            - param:
+                name: spark_conf
+                prior_value: "{{SPARK_CONF}}" 

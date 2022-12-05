@@ -1,0 +1,56 @@
+{
+  "stand_name": "sdpsna",
+  "version": "0.0.1",
+  "build": "none",
+  "type": "oozie",
+  "configure_item": "CI02720477_AiPlatformUmiid",
+  "block": "salesntwrk",
+  "datamart_group": "COREDEV",
+  "datamart_name": "custom_salesntwrk_uzp_partners",
+  "datamart_ansible_vars": "ansible/vars_all.yml",
+  "sq_pr_key": "salesntwrk_atm_standard_service",
+  "sq_pr_name": "salesntwrk_atm_standard_service",
+  "sq_scan_folder": "scripts/fake_test.py",
+  "sq_binary_folder": "",
+  "sast_conf": "devsecops-config.yml",
+  "emails": "RYuKhakhilev@sber.ru",
+  "s2t_confl_url": "https://stash.delta.sbrf.ru/projects/COREDEV/repos/s2t_datamart/browse/s2t_u_itsklsdpsna_s_custom_salesntwrk_masspers_txn.xlsx",
+  "run_hive_script_sql" : true,
+  "sbt": {
+    "build_sbt_dir": "",
+    "build_command": "",
+    "repos_file": "",
+    "options_sbt": ""
+  },
+  "maven": {
+    "pom_path": "",
+    "set_path": "",
+    "options_mvn": ""
+  },
+  "distrib_files": [
+    {
+      "source": "ctl/ctl.yml",
+      "destination": "ctl/"
+    },
+    {
+      "source": "create_sql/fake.hql",
+      "destination": "sql/"
+    },
+    {
+      "source": "create_sql/*",
+      "destination": "hdfs/create_sql/"
+    },
+    {
+      "source": "oozie/*",
+      "destination": "hdfs/oozie/"
+    },
+    {
+      "source": "scripts/*",
+      "destination": "hdfs/scripts/"
+    },
+    {
+      "source": "coverage-reports/*",
+      "destination": "hdfs/coverage-reports/"
+    }
+  ]
+}

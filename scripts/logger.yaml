@@ -1,0 +1,74 @@
+version: 1
+
+disable_existing_loggers: False
+
+
+filters:
+  ctl_web_filter:
+    (): utils.logger_utils.CTLogFilter
+
+
+formatters:
+  console:
+    format: "%(asctime)s - [%(name)s.%(funcName)s] - %(levelname)s - %(message)s"
+    datefmt: "%H:%M:%S"
+
+  hdfs_formatter:
+    format: "%(asctime)s - [%(name)s] - %(levelname)s - %(message)s"
+    datefmt: "%Y-%m-%d %H:%M:%S"
+
+  sber_logstash_formatter:
+    (): utils.logger_utils.SberLogstashFormatter
+    app_id: ${APP_ID}
+
+  ctl_log_formatter:
+    (): utils.logger_utils.CTLLogFormatter
+    loading_id: ${LOADING_ID}
+
+
+handlers:
+  console:
+    class: logging.StreamHandler
+    level: NOTSET
+    formatter: console
+
+  sber_logstash_handler:
+    class: utils.logger_utils.SberLogstashHandler
+    level: DEBUG
+    formatter: sber_logstash_formatter
+    url: ${LOGSTASH_URL}
+
+  hdfs_handler:
+    class: utils.logger_utils.HDFSHandler
+    level: DEBUG
+    formatter: hdfs_formatter
+    hdfs_file_path: ${PATH_TO_LOG_IN_HDFS}
+
+  ctl_log_handler:
+    class: utils.logger_utils.CTLogHandler
+    level: NOTSET
+    filters: [ctl_web_filter]
+    formatter: ctl_log_formatter
+    url: ${CTL}/v1/api/loading/status
+
+
+loggers:
+  urllib3: # обязательно писать НЕ в logstsh/hdfs иначе рекурсия будет
+    level: DEBUG
+    handlers: [console]
+    propagate: no
+
+  requests: # обязательно писать НЕ в logstsh/hdfs иначе рекурсия будет
+    level: DEBUG
+    handlers: [console]
+    propagate: no
+
+  py4j:  # обязательно писать НЕ в hdfs иначе рекурсия будет
+    level: INFO
+    handlers: [console, sber_logstash_handler, ctl_log_handler]
+    propagate: no
+
+
+root:
+  level: NOTSET
+  handlers: [console, sber_logstash_handler, hdfs_handler, ctl_log_handler]
